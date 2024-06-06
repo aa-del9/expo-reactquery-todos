@@ -11,6 +11,7 @@ import { TamaguiProvider, Theme } from "tamagui";
 import config from "@/tamagui.config";
 
 const queryClient = new QueryClient();
+
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
@@ -50,10 +51,11 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  console.log(colorScheme);
 
   return (
     <TamaguiProvider config={config}>
-      <Theme name={colorScheme == "dark" ? "dark" : "light"}>
+      <Theme name={colorScheme}>
         <QueryClientProvider client={queryClient}>
           <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

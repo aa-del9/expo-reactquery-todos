@@ -5,6 +5,22 @@ import { themes, tokens } from "@tamagui/themes";
 import { createTamagui } from "tamagui";
 import { createAnimations } from "@tamagui/animations-react-native";
 
+// Define light and dark themes
+const customThemes = {
+  light: {
+    background: "#ffffff",
+    text: "#000000",
+    placeholder: "#cccccc",
+    inputBackground: "#ffffff",
+  },
+  dark: {
+    background: "#000000",
+    text: "#ffffff",
+    placeholder: "#666666",
+    inputBackground: "#333333",
+  },
+};
+
 const animations = createAnimations({
   bouncy: {
     type: "spring",
@@ -24,19 +40,24 @@ const animations = createAnimations({
     stiffness: 250,
   },
 });
+
 const headingFont = createInterFont();
 const bodyFont = createInterFont();
+
 const config = createTamagui({
   animations,
-  defaultTheme: "dark",
-  shouldAddPrefersColorThemes: false,
+  defaultTheme: "light", // Set default theme
+  shouldAddPrefersColorThemes: true, // Enable system-based theme switching
   themeClassNameOnRoot: false,
   shorthands,
   fonts: {
     heading: headingFont,
     body: bodyFont,
   },
-  themes,
+  themes: {
+    ...themes,
+    ...customThemes, // Merge custom themes
+  },
   tokens,
   media: createMedia({
     xs: { maxWidth: 660 },
@@ -59,8 +80,6 @@ const config = createTamagui({
 export type AppConfig = typeof config;
 
 declare module "tamagui" {
-  // overrides TamaguiCustomConfig so your custom types
-  // work everywhere you import `tamagui`
   interface TamaguiCustomConfig extends AppConfig {}
 }
 
