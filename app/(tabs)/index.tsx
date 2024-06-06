@@ -1,23 +1,24 @@
-import {
-  ActivityIndicator,
-  Button,
-  ListRenderItem,
-  StyleSheet,
-  TextInput,
-  FlatList,
-} from "react-native";
-
-import EditScreenInfo from "@/components/EditScreenInfo";
-import { Text, View } from "@/components/Themed";
-import { useEffect, useState } from "react";
-import { Todo, deleteToDo, getTodos, postToDo, updateToDo } from "@/api/todos";
+import { useState } from "react";
+import { FlatList, ListRenderItem, ActivityIndicator } from "react-native";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Ionicons } from "@expo/vector-icons";
+import {
+  YStack,
+  XStack,
+  Input,
+  Button,
+  Text,
+  useTheme,
+  getVariableValue,
+} from "tamagui";
+import { Todo, deleteToDo, getTodos, postToDo, updateToDo } from "@/api/todos";
 
 export default function TabOneScreen() {
   const [todoText, setTodo] = useState<string>("");
   const queryClient = useQueryClient();
-  //get query
+  const theme = useTheme();
+
+  // Get query
   const {
     data: todos,
     isLoading,
@@ -26,25 +27,20 @@ export default function TabOneScreen() {
     queryKey: ["todos"],
     queryFn: getTodos,
   });
-  //add mutation
+
+  // Add mutation
   const { mutate: addMutation } = useMutation({
     mutationFn: postToDo,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["todos"],
-        exact: true,
-      });
+      queryClient.invalidateQueries({ queryKey: ["todos"], exact: true });
     },
   });
 
-  //delete mutation
+  // Delete mutation
   const { mutate: deleteMutation } = useMutation({
     mutationFn: deleteToDo,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["todos"],
-        exact: true,
-      });
+      queryClient.invalidateQueries({ queryKey: ["todos"], exact: true });
     },
   });
 
@@ -58,7 +54,8 @@ export default function TabOneScreen() {
       );
     });
   };
-  //update mutation
+
+  // Update mutation
   const { mutate: updateMutation } = useMutation({
     mutationFn: updateToDo,
     onSuccess: updateQueryClient,
@@ -75,49 +72,64 @@ export default function TabOneScreen() {
       });
     };
 
+    const textColor = getVariableValue(theme.text);
+    const backgroundColor = getVariableValue(theme.background);
+
+    const placeholderColor = getVariableValue(theme.placeholder);
+    const inputBackgroundColor = getVariableValue(theme.inputBackground);
+
     return (
-      <View style={styles.todo}>
-        <View style={{ flexGrow: 1, flexDirection: "row", columnGap: 10 }}>
+      <XStack
+        justifyContent="space-between"
+        alignItems="center"
+        width="100%"
+        paddingVertical={7}
+        backgroundColor={backgroundColor}
+      >
+        <XStack flexGrow={1} flexDirection="row" gap={5}>
           <Ionicons
             name={
               item.completed ? "checkmark-circle" : "checkmark-circle-outline"
             }
             size={24}
-            color="white"
+            color={textColor}
             onPress={updateDone}
           />
-          <Text style={styles.title} key={item.id}>
+          <Text key={item.id} fontSize={20} color={textColor}>
             {item.title}
           </Text>
-        </View>
-        <Ionicons
-          onPress={deleteTodo}
-          style={{ flexGrow: 0 }}
-          name="trash"
-          size={24}
-          color="red"
-        />
-      </View>
+        </XStack>
+        <Ionicons onPress={deleteTodo} name="trash" size={24} color="red" />
+      </XStack>
     );
   };
 
+  const textColor = getVariableValue(theme.text);
+  const backgroundColor = getVariableValue(theme.background);
+  const placeholderColor = getVariableValue(theme.placeholder);
+  const inputBackgroundColor = getVariableValue(theme.inputBackground);
+
   return (
-    <View style={styles.container}>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-around",
-          width: "100%",
-        }}
-      >
-        <TextInput
+    <YStack
+      backgroundColor={backgroundColor}
+      height={"100%"}
+      paddingVertical={20}
+    >
+      <YStack alignItems="center" width="100%" rowGap={20}>
+        <Input
+          fontWeight={300}
           value={todoText}
           onChangeText={setTodo}
-          style={styles.input}
-          placeholder="Add todo"
+          placeholder="Type todo"
+          placeholderTextColor={placeholderColor}
+          width="90%"
+          borderRadius={4}
+          paddingHorizontal={10}
+          backgroundColor={inputBackgroundColor}
         />
         <Button
-          title="Add Todo"
+          fontWeight="bold"
+          themeInverse
           onPress={() => {
             addMutation({
               id: todos.length + 1,
@@ -125,50 +137,20 @@ export default function TabOneScreen() {
               completed: false,
             });
           }}
+        >
+          Add Todo
+        </Button>
+      </YStack>
+      <YStack space width="100%" paddingVertical={20} alignItems="center">
+        {isLoading && <ActivityIndicator size={"large"} />}
+        {isError && <Text color={textColor}>Error fetching todos</Text>}
+        <FlatList
+          data={todos}
+          renderItem={renderTodos}
+          keyExtractor={(item) => item.id.toString()}
+          style={{ width: "93%" }}
         />
-      </View>
-
-      {isLoading && <ActivityIndicator size={"large"} />}
-      {isError && <Text>Error fetching todos</Text>}
-      <FlatList
-        data={todos}
-        renderItem={renderTodos}
-        keyExtractor={(item) => item.id}
-        style={{ width: "93%" }}
-      />
-    </View>
+      </YStack>
+    </YStack>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-    paddingVertical: 20,
-    flex: 1,
-    alignItems: "center",
-    // backgroundColor: "white",
-    rowGap: 10,
-  },
-  title: {
-    fontSize: 20,
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-  input: {
-    paddingHorizontal: 10,
-    backgroundColor: "white",
-    width: "68%",
-    height: "80%",
-    borderRadius: 4,
-  },
-  todo: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    columnGap: 10,
-    width: "100%",
-    paddingVertical: 7,
-  },
-});

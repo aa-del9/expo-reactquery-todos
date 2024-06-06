@@ -1,13 +1,8 @@
 {
   "todos": [
     {
-      "id": "1",
-      "title": "Description of the new task",
-      "completed": true
-    },
-    {
-      "id": "2",
-      "title": "Description of the new task",
+      "id": 2,
+      "title": "Lol",
       "completed": false
     }
   ]
