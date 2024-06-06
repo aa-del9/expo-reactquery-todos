@@ -3,7 +3,7 @@ import axios from "axios";
 const apiBaseUrl = process.env.EXPO_PUBLIC_TODO_API_URL;
 
 export type Todo = {
-  id: string;
+  id: number;
   title: string;
   completed: boolean;
 };
@@ -24,7 +24,7 @@ export const postToDo = async (todo: Todo) => {
   return response.data;
 };
 
-export const deleteToDo = async (id: string) => {
+export const deleteToDo = async (id: number) => {
   console.log(id);
 
   const response = await axios.delete(`${apiBaseUrl}/${id}`);

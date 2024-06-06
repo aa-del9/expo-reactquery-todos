@@ -21,6 +21,12 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
+        headerStyle: {
+          backgroundColor: Colors[colorScheme ?? "light"].background,
+        },
+        tabBarStyle: {
+          backgroundColor: Colors[colorScheme ?? "light"].background,
+        },
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
@@ -31,21 +37,10 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Todos",
+          headerTitleStyle: {
+            color: Colors[colorScheme ?? "light"].text,
+          },
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          // headerRight: () => (
-          //   <Link href="/modal" asChild>
-          //     <Pressable>
-          //       {({ pressed }) => (
-          //         <FontAwesome
-          //           name="info-circle"
-          //           size={25}
-          //           color={Colors[colorScheme ?? "light"].text}
-          //           style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-          //         />
-          //       )}
-          //     </Pressable>
-          //   </Link>
-          // ),
         }}
       />
     </Tabs>

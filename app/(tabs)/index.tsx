@@ -86,7 +86,7 @@ export default function TabOneScreen() {
         paddingVertical={7}
         backgroundColor={backgroundColor}
       >
-        <XStack flexGrow={1} flexDirection="row" space>
+        <XStack flexGrow={1} flexDirection="row" gap={5}>
           <Ionicons
             name={
               item.completed ? "checkmark-circle" : "checkmark-circle-outline"
@@ -110,20 +110,26 @@ export default function TabOneScreen() {
   const inputBackgroundColor = getVariableValue(theme.inputBackground);
 
   return (
-    <YStack backgroundColor={backgroundColor}>
-      <XStack justifyContent="space-around" width="100%">
+    <YStack
+      backgroundColor={backgroundColor}
+      height={"100%"}
+      paddingVertical={20}
+    >
+      <YStack alignItems="center" width="100%" rowGap={20}>
         <Input
+          fontWeight={300}
           value={todoText}
           onChangeText={setTodo}
-          placeholder="Add todo"
+          placeholder="Type todo"
           placeholderTextColor={placeholderColor}
-          width="68%"
+          width="90%"
           borderRadius={4}
           paddingHorizontal={10}
-          // color={inputBackgroundColor}
           backgroundColor={inputBackgroundColor}
         />
         <Button
+          fontWeight="bold"
+          themeInverse
           onPress={() => {
             addMutation({
               id: todos.length + 1,
@@ -134,14 +140,8 @@ export default function TabOneScreen() {
         >
           Add Todo
         </Button>
-      </XStack>
-      <YStack
-        space
-        width="100%"
-        paddingVertical={20}
-        alignItems="center"
-        // backgroundColor={backgroundColor}
-      >
+      </YStack>
+      <YStack space width="100%" paddingVertical={20} alignItems="center">
         {isLoading && <ActivityIndicator size={"large"} />}
         {isError && <Text color={textColor}>Error fetching todos</Text>}
         <FlatList

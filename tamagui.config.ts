@@ -10,8 +10,8 @@ const customThemes = {
   light: {
     background: "#ffffff",
     text: "#000000",
-    placeholder: "#cccccc",
-    inputBackground: "#ffffff",
+    placeholder: "#545454",
+    inputBackground: "#F5F5F5",
   },
   dark: {
     background: "#000000",
